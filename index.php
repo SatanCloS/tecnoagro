@@ -457,10 +457,13 @@
               <a class="collapse-item" href="#" onclick="Cargar('vista/rpt_gastosDetallados.php');" >
                 <span data-feather="layers"></span>
                 Gastos Detallados
+              </a>
+
+              <a class="collapse-item" href="#" onclick="Cargar('vista/rpt_gastosResumen.php');" >
+                <span data-feather="layers"></span>
+                
+                <span>Gastos Resumen</span>
               </a> 
-
-
-
 
           </div>
         </div>
@@ -476,6 +479,12 @@
         <div id="collapseGerencial" class="collapse" aria-labelledby="headingGerencial" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
 
+              <!-- <h6 class="collapse-header">Procesar Información</h6>
+              <a class="collapse-item" href="#" onclick="Cargar('vista/paginaEnConstruccion.php');" >
+                <span data-feather="layers"></span>
+                
+                <span style="color: red;">Generar Información</span>
+              </a> -->
 
               <h6 class="collapse-header">Balance</h6>
               <a class="collapse-item" href="#" onclick="Cargar('vista/paginaEnConstruccion.php');" >
@@ -490,36 +499,36 @@
                 <span style="color: red;">Balance Resumido</span>
               </a>
 
-              <a class="collapse-item" href="#" onclick="Cargar('vista/paginaEnConstruccion.php');" >
+              <a class="collapse-item" href="#" onclick="Cargar('vista/rpt_EGP.php');" >
                 <span data-feather="layers"></span>
                 
-                <span style="color: red;">E.G.P.</span>
+                <span>E.G.P.</span>
               </a>
 
               <h6 class="collapse-header">Utilidad</h6>
-              <a class="collapse-item" href="#" onclick="Cargar('vista/paginaEnConstruccion.php');" >
+              <a class="collapse-item" href="#" onclick="Cargar('vista/rpt_UtilidadDetallada.php');" >
                 <span data-feather="layers"></span>
                 
-                <span style="color: red;">Utilidad Detallada</span>
+                <span>Utilidad Detallada</span>
               </a>
               
-              <a class="collapse-item" href="#" onclick="Cargar('vista/paginaEnConstruccion.php');" >
+              <a class="collapse-item" href="#" onclick="Cargar('vista/rpt_UtilidadResumida.php');" >
                 <span data-feather="layers"></span>
                 
-                <span style="color: red;">Utilidad Resumida</span>
+                <span>Utilidad Resumida</span>
               </a>
               
               <h6 class="collapse-header">Valorados</h6>
-              <a class="collapse-item" href="#" onclick="Cargar('vista/paginaEnConstruccion.php');" >
+              <a class="collapse-item" href="#" onclick="Cargar('vista/rpt_InventarioValorado.php');" >
                 <span data-feather="layers"></span>
                 
-                <span style="color: red;">Inventario Valorado</span>
+                <span">Inventario Valorado</span>
               </a>
               
-              <a class="collapse-item" href="#" onclick="Cargar('vista/paginaEnConstruccion.php');" >
+              <a class="collapse-item" href="#" onclick="Cargar('vista/rpt_KardexValorado.php');" >
                 <span data-feather="layers"></span>
                 
-                <span style="color: red;">Kardex Valorado</span>
+                <span">Kardex Valorado</span>
               </a>
 
           </div>

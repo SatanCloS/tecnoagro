@@ -5,20 +5,11 @@
     <script type="text/javascript">
         "use strict";
         $(document).ready(function() {
-            // Crear un objeto Date para el primer día del mes actual
-            var primerDiaMes = new Date();
-            primerDiaMes.setDate(1);
-            // Obtener la fecha en formato "AAAA-MM-DD"
-            var fechaFormato = primerDiaMes.toJSON().slice(0, 10);
-            // Establecer el valor del elemento con id "txtFecha_ini"
-            $('#txtfecha_ini').val(fechaFormato);
-
-            $('#txtfecha_fin').val(new Date().toJSON().slice(0, 10));
+            $('#txtFecha').val(new Date().toJSON().slice(0, 10));
             $('#cboSucursal').val();
 
-            $("#tituloLista").text("Reporte: Gastos Detallados");
-            //$("#tituloMantenimiento").text("Gestión de Ingresos o Compras");
-            $("#identificador").val("Reporte: Gastos Detallados");
+            $("#tituloLista").text("Reporte: Inventario Valorado");
+            $("#identificador").val("Reporte: Inventario Valorado");
 
             Listar();
 
@@ -27,19 +18,20 @@
             ListarCboSucursal();
 
             $("#btnConsultar").click(function() {
-                Listar();
+                if (validar() == true) {
+                    Listar();
+                }
             })
         })
 
 
         function Listar() {
             $.ajax({
-                url: "controlador/contEECCCliente.php",
+                url: "controlador/contGerencial.php",
                 type: "POST",
                 data: {
-                    "accion": "gastosDetallados",
-                    "txtfecha_ini": $('#txtfecha_ini').val(),
-                    "txtfecha_fin": $('#txtfecha_fin').val(),
+                    "accion": "inventario_valorado",
+                    "txtFecha": $('#txtFecha').val(),
                     "cboSucursal": $('#cboSucursal').val()
                 },
                 //console.log(data);
@@ -50,18 +42,13 @@
                     var $cuerpo = "";
                     if (data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
-                            var fecha = data[i].fecha !== null ? data[i].fecha : '';
-                            var soles = data[i].soles == 0 ? '' : data[i].soles;
-                            var dolares = data[i].dolares == 0 ? '' : data[i].dolares;
-
+                            var costo = data[i].costo == 0 ? '' : data[i].costo;
                             $cuerpo += "<tr>";
-                            $cuerpo += "<td>" + data[i].grupoConcepto + "</td>";
-                            $cuerpo += "<td>" + fecha + "</td>";
-                            $cuerpo += "<td>" + data[i].documento + "</td>";
-                            $cuerpo += "<td>" + data[i].concepto + "</td>";
-                            $cuerpo += "<td align='right'>" + soles + "</td>";
-                            $cuerpo += "<td align='right'>" + dolares + "</td>";                           
-                            $cuerpo += "<td>" + data[i].detalle + "</td>";
+                            $cuerpo += "<td>" + data[i].linea + "</td>";
+                            $cuerpo += "<td>" + data[i].articulo + "</td>";
+                            $cuerpo += "<td>" + data[i].medida + "</td>";
+                            $cuerpo += "<td align='right'>" + data[i].stock  + "</td>";
+                            $cuerpo += "<td align='right'>" + costo + "</td>";
                             $cuerpo += "</tr>";
                         }
                     }
@@ -69,6 +56,7 @@
                     $("#tCXC").DataTable().destroy();
                     $("#tbCXC").html($cuerpo);
                     $("#tCXC").DataTable({
+                        "lengthMenu": [[100, 50, 25, -1], [100, 50, 25, "All"]],
                         "processing": true,
                         'dom': 'Blfrtip',
                         'buttons': [
@@ -92,7 +80,7 @@
                             orderable: false,
                             targets: 2
                         }],
-                        "order": [[0, 'asc']]
+                        //"order": [[0, 'asc']]
 
                     });
                     //loading(false);
@@ -104,6 +92,30 @@
         }
 
 
+        // function ListarCboArticulo() {
+        //     $.ajax({
+        //         url: "controlador/contArticulo.php",
+        //         type: "POST",
+        //         data: {
+        //             "accion": "Listar"
+        //         },
+        //         success: function(data) {
+        //             var data = JSON.parse(data);
+        //             //console.log(data);
+        //             var $cuerpo = "";
+        //             if (data.length > 0) {
+        //                 $cuerpo += "<option value='0'>- SELECCIONE -</option>";
+        //                 for (var i = 0; i < data.length; i++) {
+        //                     $cuerpo += "<option value='" + data[i].codigo + "'>" + data[i].nombre + "</option>";
+        //                 }
+        //             }
+        //             $("#cboArticulo").html($cuerpo);
+        //         },
+        //         error: function(result) {
+        //             console.log(result);
+        //         }
+        //     });
+        // }
 
         function ListarCboSucursal() {
             $.ajax({
@@ -131,21 +143,28 @@
             });
         }
 
-        function Alerta(tipo, titulo, texto) {
+        function validar() {
+            var titulo = 'Validación de Kardex valorado';
+            
+            if ($("#cboSucursal").val().trim() == '0') {
+                msgAlerta('error', 'Debe seleccionar una sucursal', titulo);
+                $("#cboSucursal").focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        function msgAlerta(tipo, texto, titulo) {
             Swal.fire({
                 confirmButtonColor: '#007bff',
                 icon: tipo,
                 title: titulo,
                 text: texto
                     //footer: '<a href>Why do I have this issue?</a>'
-            })
+            });
         }
 
-        function fnLimpiar() {
-            // $("#hdcod").val("0");
-            // //$("#txtfecha_mop").val("");
-            // $("#txtObservacion_mop").val("");
-        }
 
     </script>
 </head>
@@ -166,19 +185,12 @@
                                 </div>
                             </div>
 
-
                             <div class="card-header">
                                 <div class="form-row mb-12">
-                                    <label for="txtfecha_ini" class="col-sm-2 col-form-label-sm" style="text-align:right" >
-                                       Fecha Incial: </label>
+                                    <label for="lblFecha" class="col-sm-2 col-form-label-sm" style="text-align:right" >
+                                       Hasta: </label>
                                     <div class="col-sm-2 col-md-2">
-                                        <input type="date" class="form-control form-control-sm" id="txtfecha_ini" name="txtfecha_ini" maxlength="10"  />
-                                    </div>
-
-                                    <label for="txtfecha_fin" class="col-sm-2 col-form-label-sm" style="text-align:right" >
-                                       Fecha Final: </label>
-                                    <div class="col-sm-2 col-md-2">
-                                        <input type="date" class="form-control form-control-sm" id="txtfecha_fin" name="ttxtfecha_finxtHasta" maxlength="10"  />
+                                        <input type="date" class="form-control form-control-sm" id="txtFecha" name="txtFecha" maxlength="10"  />
                                     </div>
 
                                     <div class="col-sm-2 text-right">
@@ -186,7 +198,7 @@
                                         <i class="fas fa-plus-square"></i><span>&nbsp;Consultar</span></button>
                                     </div>
                                 </div>
-
+                               
 
                                 <div class="form-row mb-12">
                                     <label for="txtSucursal" class="col-sm-2 col-form-label-sm" style="text-align:right" >
@@ -204,13 +216,11 @@
                                     <table id="tCXC" class="display compact order-column form-control-sm" style="width:98%;">
                                         <thead>
                                             <tr>
-                                                <th style="width: 20%; text-align:center;">Grupo</th>
-                                                <th style="width: 10%; text-align:center;">Fecha</th>
-                                                <th style="width: 10%; text-align:center;">Documento</th>
-                                                <th style="width: 20%; text-align:center;">Concepto</th>
-                                                <th style="width: 10%; text-align:right;">Soles S/.</th>
-                                                <th style="width: 10%; text-align:right;">Dolares S/.</th>
-                                                <th style="width: 20%; text-align:center;">Detalle</th>                                                                                               
+                                                <th style="width: 20%; text-align:center;">Línea</th>
+                                                <th style="width: 50%; text-align:center;">Artículo</th>
+                                                <th style="width: 10%; text-align:center;">Und. Med.</th>
+                                                <th style="width: 10%; text-align:right;">Stock</th>
+                                                <th style="width: 10%; text-align:right;">Costo</th>                                                
                                             </tr>
                                         </thead>
                                         <tbody id="tbCXC">

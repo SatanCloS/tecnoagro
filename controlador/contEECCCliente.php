@@ -79,7 +79,6 @@ if ($accion == "CuentasxCobrar") {
 }
 
 
-
 if ($accion == "conceptoIndividual") {
     try {
         //echo var_dump($data);
@@ -112,9 +111,6 @@ if ($accion == "conceptoIndividual") {
         echo json_encode($data);
     }
 }
-
-
-
 
 if ($accion == "gastosDetallados") {
     try {
@@ -149,7 +145,6 @@ if ($accion == "gastosDetallados") {
         echo json_encode($data);
     }
 }
-
 
 
 if ($accion == "saldosCuentas") {
@@ -218,7 +213,6 @@ if ($accion == "cuentasporPagar") {
 }
 
 
-
 if ($accion == "EstadoCuentaProveedor") {
     try {
         //echo var_dump($data);
@@ -244,6 +238,38 @@ if ($accion == "EstadoCuentaProveedor") {
                     "salida_dolar" => $row["salida_dolar"],
                     "saldo_dolar" => $row["saldo_dolar"],
                     "fila" => $row["fila"]                    
+                ));
+            }
+        } else {
+            $data = "";
+        }
+        echo json_encode($data);
+    } catch (Exception $e) {
+        $json = $e->getMessage();
+        $data['data'] = $json;
+        echo json_encode($data);
+    }
+}
+
+if ($accion == "gastosResumen") {
+    try {
+        //echo var_dump($data);
+        $obj = new ClsEECCCliente();
+        $fecha_ini = $_POST['txtfecha_ini'];
+        $fecha_fin = $_POST['txtfecha_fin'];
+        $codigo_suc = $_POST['cboSucursal'];
+        $tipo = 1;
+        $rsql = $obj->gastosResumen($fecha_ini, $fecha_fin, $codigo_suc, $tipo);
+        //echo var_dump($rsql);
+
+        $data = array();
+        if ($rsql) {
+            while ($row = $rsql->fetch(PDO::FETCH_NAMED)) {
+                array_push($data, array(
+                    "grupo" => $row["grupo"],
+                    "concepto" => $row["concepto"],
+                    "soles" => $row["soles"],
+                    "dolares" => $row["dolares"]
                 ));
             }
         } else {

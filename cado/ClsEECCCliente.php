@@ -145,5 +145,25 @@ class ClsEECCCLiente
         }
     }
 
+    function gastosResumen($fecha_ini, $fecha_fin, $codigo_suc, $tipo)
+    {
+        try {
+            $ocado = new conexion();
+            $sql = "call gastosResumen(:fecha_ini, :fecha_fin, :codigo_suc, :tipo);";            
+            //echo $sql;
+            //echo var_dump($sql);
+            $parametros = array(
+                ':fecha_ini' => $fecha_ini,
+                ':fecha_fin' => $fecha_fin,
+                ':codigo_suc' => $codigo_suc,
+                ':tipo' => $tipo
+            );
+            $obj = $ocado->Ejecutar($sql, $parametros);
+            return $obj;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
 }
 ?>
